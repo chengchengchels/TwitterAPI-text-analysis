@@ -1,6 +1,6 @@
 # TwitterAPI-text-analysis
 
-Initially the code was to display a way to generate key words in an example of economic news(I also tried 'blockchain') in #USA, #ASIA and #EU from Tweets, 
+Initially the code was to display a way to generate key words in an example of economic(I also tried #blockchain instead) news in #USA, #ASIA and #EU from Tweets, 
 I modified the code minimally to generate a correlogram showing the key words from music-related feeds with hashtag 
 ALANWALKER, JUSTINBIEBER and MARSHMELLO. 
 
