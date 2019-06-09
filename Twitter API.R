@@ -8,11 +8,7 @@
 library("twitteR")
 library("tm")
 
-#necessary file for Windows
-#setwd("/Users/thomaskurnicki/Desktop/Text analytics class/Day 1/Twitter API :: to be posted")
-#download.file(url="http://curl.haxx.se/ca/cacert.pem", destfile="cacert.pem")
 
-#to get your consumerKey and consumerSecret see the twitteR documentation for instructions
 consumer_key <- 'Byar5NpnRUjZtvrXGJjOLt0iy'
 consumer_secret <- 'vpTMV2AYRq4KFE3wxHs83bpfrf5D37y5vzMDEfrWHY6tzYDoeF'
 access_token <- '152952148-3LPmRtv9QCdxpfZxCQWKMoApPy9suRAJLj5wBQC9'
@@ -28,7 +24,8 @@ e = twitteR::twListToDF(EU)
 Asia <- twitteR::searchTwitter('#Asia + #Blockchain', n = 1000, since = '2017-01-01', retryOnRateLimit = 1e3)
 a = twitteR::twListToDF(Asia)
 
-#class two-tidy data from above
+
+
 library(dplyr)
 library(stringr)
 library(tidytext)
@@ -41,7 +38,7 @@ frequencies_tokens_nostop_d <- d %>%
 
 frequencies_tokens_nostop_d%>%count(word, sort=TRUE)
 
-#frequencies_tokens_nostop_d <- d %>%unnest_tokens(word, text) %>%anti_join(stop_words)%>%count(word, sort=TRUE)
+
 frequencies_tokens_nostop_e <- e %>%
   unnest_tokens(word, text) %>%
   anti_join(stop_words) 
@@ -52,7 +49,8 @@ frequencies_tokens_nostop_a <- a %>%
   anti_join(stop_words) 
 frequencies_tokens_nostop_a%>%count(word, sort=TRUE)
 
-#####then: try the methods we use w/ JaneAusten
+
+
 library(tidyr)
 frequency <- bind_rows(mutate(frequencies_tokens_nostop_d, country="USA"),
                        mutate(frequencies_tokens_nostop_e, country="EU"), 
@@ -65,7 +63,8 @@ frequency <- bind_rows(mutate(frequencies_tokens_nostop_d, country="USA"),
   spread(country, proportion) %>% 
   gather(country, proportion, `USA`:`EU`)
 
-#let's plot the correlograms:
+
+
 library(scales)
 library(ggplot2)
 ggplot(frequency, aes(x=proportion, y=`Asia`, 
@@ -87,31 +86,3 @@ cor.test(data=frequency[frequency$country == "EU",],
 cor.test(data=frequency[frequency$country == "USA",],
          ~proportion + `Asia`)
 
-#get corpus from my Twitter dataset:????
-
-#################################
-####bigram application:#########
-library(dplyr)
-library(tidytext)
-library(janeaustenr)
-library(tidyr)
-
-#frequencies_tokens_nostop_d <- d %>%unnest_tokens(word, text) %>%anti_join(stop_words) 
-
-usa_bigrams <-d %>%
-  unnest_tokens(bigram, text, token = "ngrams", n=2)%>%count(bigram, sort = TRUE)
-
-#austen_bigrams ----We want to see the bigrams (words that appear together, "pairs")
-
-
-library(tidyr)
-bigrams_separated <- usa_bigrams %>%
-  separate(bigram, c("word1", "word2"), sep = " ")#separate the bigram(2-words)
-
-bigrams_filtered <- bigrams_separated %>%
-  filter(!word1 %in% stop_words$word) %>%
-  filter(!word2 %in% stop_words$word)#to remove the words that are in stop_words
-
-#already "count"ed before
-#creating the new bigram, "no-stop-words": bigram_counts <- bigrams_filtered %>%count(word1, word2, sort = TRUE)
-#want to see the new bigrams:bigram_counts
