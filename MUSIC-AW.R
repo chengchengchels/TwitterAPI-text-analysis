@@ -1,16 +1,6 @@
-###############################################################
-######Querying Twitter for shares, like Trump tweets###########
-###############################################################
-#install the necessary packages
-#install.packages("twitteR")
-#install.packages("tm")
-
 library("twitteR")
 library("tm")
 
-#necessary file for Windows
-#setwd("/Users/thomaskurnicki/Desktop/Text analytics class/Day 1/Twitter API :: to be posted")
-#download.file(url="http://curl.haxx.se/ca/cacert.pem", destfile="cacert.pem")
 
 #to get your consumerKey and consumerSecret see the twitteR documentation for instructions
 consumer_key <- 'Byar5NpnRUjZtvrXGJjOLt0iy'
@@ -28,13 +18,12 @@ m = twitteR::twListToDF(Marshmello)
 AlanWalker <- twitteR::searchTwitter('#AlanWalker + #MUSIC', n = 1000, since = '2006-01-01', retryOnRateLimit = 1e3)
 a = twitteR::twListToDF(AlanWalker)
 
-#class two-tidy data from above
 library(dplyr)
 library(stringr)
 library(tidytext)
 
 data(stop_words)
-custom_stop_words <- bind_rows(data_frame(word = c("https","t.co","rt"), #Twitter's Shortened Link：t.co
+custom_stop_words <- bind_rows(data_frame(word = c("https","t.co","rt"), 
                                           lexicon = c("custom")), 
                                stop_words)
 
@@ -46,7 +35,6 @@ frequencies_tokens_nostop_J <- J %>%
 
 frequencies_tokens_nostop_J%>%count(word, sort=TRUE)
 
-#frequencies_tokens_nostop_d <- d %>%unnest_tokens(word, text) %>%anti_join(stop_words)%>%count(word, sort=TRUE)
 frequencies_tokens_nostop_m <- m %>%
   unnest_tokens(word, text) %>%
   anti_join(custom_stop_words) 
@@ -57,7 +45,8 @@ frequencies_tokens_nostop_a <- a %>%
   anti_join(custom_stop_words) 
 frequencies_tokens_nostop_a%>%count(word, sort=TRUE)
 
-#####then: try the methods we use w/ JaneAusten
+
+
 library(tidyr)
 frequency <- bind_rows(mutate(frequencies_tokens_nostop_J, country="JustinBieber"),
                        mutate(frequencies_tokens_nostop_m, country="Marshmello"), 
@@ -70,7 +59,7 @@ frequency <- bind_rows(mutate(frequencies_tokens_nostop_J, country="JustinBieber
   spread(country, proportion) %>% 
   gather(country, proportion, `JustinBieber`:`Marshmello`)
 
-#let's plot the correlograms:
+#plot the correlograms:
 library(scales)
 library(ggplot2)
 
@@ -93,7 +82,9 @@ cor.test(data=frequency[frequency$country == "JustinBieber",],
 cor.test(data=frequency[frequency$country == "Marshmello",],
          ~proportion + `AlanWalker`)
 
-#get corpus from my Twitter dataset:????
+
+
+
 
 #################################
 ####bigram application:#########
@@ -102,26 +93,21 @@ library(tidytext)
 library(janeaustenr)
 library(tidyr)
 
-#frequencies_tokens_nostop_d <- d %>%unnest_tokens(word, text) %>%anti_join(stop_words) 
 
 aw_bigrams <-a %>%
   unnest_tokens(bigram, text, token = "ngrams", n=2)%>%count(bigram, sort = TRUE)
 
-#austen_bigrams ----We want to see the bigrams (words that appear together, "pairs")
-
 
 library(tidyr)
 bigrams_separated <- aw_bigrams %>%
-  separate(bigram, c("word1", "word2"), sep = " ")#separate the bigram(2-words)
+  separate(bigram, c("word1", "word2"), sep = " ")
 
 bigrams_filtered <- bigrams_separated %>%
   filter(!word1 %in% stop_words$word) %>%
-  filter(!word2 %in% stop_words$word)#to remove the words that are in stop_words
+  filter(!word2 %in% stop_words$word)
 
-#already "count"ed before
-#creating the new bigram, "no-stop-words": 
+
 bigram_counts <- bigrams_filtered %>%count(word1, word2, sort = TRUE)
-#want to see the new bigrams:
 bigram_counts
 
 
