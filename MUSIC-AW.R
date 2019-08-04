@@ -3,10 +3,10 @@ library("tm")
 
 
 #to get your consumerKey and consumerSecret see the twitteR documentation for instructions
-consumer_key <- 'Byar5NpnRUjZtvrXGJjOLt0iy'
-consumer_secret <- 'vpTMV2AYRq4KFE3wxHs83bpfrf5D37y5vzMDEfrWHY6tzYDoeF'
-access_token <- '152952148-3LPmRtv9QCdxpfZxCQWKMoApPy9suRAJLj5wBQC9'
-access_secret <- 'sv7v59TdPKRHrd7wRVv3cXjhkpypAN1jC0MI1aKoFNd7S'
+consumer_key <- ''
+consumer_secret <- ''
+access_token <- ''
+access_secret <- ''
 
 setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
 JustinBieber <- twitteR::searchTwitter('#JUSTINBIEBER + #MUSIC', n = 1000, since = '2006-01-01', retryOnRateLimit = 1e3)
